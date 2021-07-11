@@ -1,9 +1,19 @@
 //set express
 const express = require('express')
 const dateFormat = require("dateformat");
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+const Joi = require('joi');
 
+const contactSchema = Joi.object({
+  name: Joi.string().required().min(2).max(70),
+  email: Joi.string().required().email(),
+  phone: Joi.number().integer().min(9),
+  submit: Joi.string()
+});
 
+const getImg = require('./getImgs.js');
+
+getImg.getArrayImg2(20)
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,18 +44,33 @@ app.get("/services*", (req, res) => {
       res.render("services",{myArray:array});
       });
 
+app.get("/gallery", async (req, res) => {
+        let arr = await getImg.getArrayImg2(249);
+        console.log(arr)
+        res.render("gallery",{myArray:arr});
+        });
+
 app.get("*", (req, res) => {
     
         res.render("index",{title:test()});
         });
 
-app.post("/thankyou", (req, res) => {
-          console.log(req.body)
+app.post("/contact", (req, res) => {
+            const { error, value } = contactSchema.validate(req.body);
+            if (error) {
+              res.render("contact",{title:test()});
+              return;
+            }
+
+          let mes = ''
+          if ( req && req.body &&  'submitNow' in  req.body){
+            mes = 'We are going to call you now!'
+          }
           let name = '';
           if (req.body.name) {
             name = req.body.name;
           }
-          res.render("thankyou",{name:name});
+          res.render("thankyou",{name:name,mes:mes});
           });
 
     

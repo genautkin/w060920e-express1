@@ -25,6 +25,12 @@
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
+
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
@@ -140,7 +146,7 @@
            
           <div class="row">
             <div class="col-lg-6">
-              <form id="contact-form" action="/thankyou" method="POST" novalidate="novalidate" autocomplete="off">
+              <form id="contact-form" action="/contact" method="POST" novalidate="novalidate" autocomplete="off">
                 <div class="form-group">
                   <label for="name">* Name:</label>
                   <input type="text" name="name" id="name" class="form-control">
@@ -154,6 +160,7 @@
                   <input type="tel" name="phone" id="phone" class="form-control">
                 </div>
                 <button type="submit" name="submit" value="Contact Me" class="btn btn-primary">Contact Me!</button>
+                <button type="submit" name="submitNow" value="Contact Me" class="btn btn-primary">Contact Me Now!</button>
               </form>
             </div>
           </div>
@@ -286,6 +293,7 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
@@ -294,10 +302,11 @@
   <script src="assets/vendor/purecounter/purecounter.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+  <script src="./scripts/validator.js"></script>
 </body>
 
 </html>
