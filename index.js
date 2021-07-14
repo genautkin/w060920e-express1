@@ -33,6 +33,7 @@ app.get("", (req, res) => {
 
 
     app.get("/contact*", (req, res) => {
+      console.log(req.query)
       res.render("contact",{title:test()});
       });
 
@@ -45,7 +46,7 @@ app.get("/services*", (req, res) => {
       });
 
 app.get("/gallery", async (req, res) => {
-        let arr = await getImg.getArrayImg2(249);
+        let arr = await getImg.getArrayImg2(100);
         console.log(arr)
         res.render("gallery",{myArray:arr});
         });
