@@ -19,9 +19,8 @@ exports.getArrayImg2 =async function (num=8) {
     let promises = [];
     let arr = [];
     for (let i = 0; i < num; i++) {
-        let promisesRequestToServer = fetch('https://picsum.photos/300/300')
-        .then((res) => arr.push({src:res.url}))
-        promises.push(promisesRequestToServer)
+        // let promisesRequestToServer = fetch('https://picsum.photos/300/300').then((res) => arr.push({src:res.url}))
+        promises.push(fetch('https://picsum.photos/300/300').then((res) => arr.push({src:res.url})))
     }
     await Promise.all(promises)
      return arr;

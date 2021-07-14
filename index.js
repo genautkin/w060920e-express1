@@ -13,12 +13,11 @@ const contactSchema = Joi.object({
 
 const getImg = require('./getImgs.js');
 
-getImg.getArrayImg2(20)
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs')
-const port = 3000
+const port = process.env.PORT || 3000
 
 
 //set static folder
@@ -46,7 +45,7 @@ app.get("/services*", (req, res) => {
       });
 
 app.get("/gallery", async (req, res) => {
-        let arr = await getImg.getArrayImg2(100);
+        let arr = await getImg.getArrayImg2(20);
         console.log(arr)
         res.render("gallery",{myArray:arr});
         });
