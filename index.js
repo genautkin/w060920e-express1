@@ -14,7 +14,8 @@ const contactSchema = Joi.object({
 const getImg = require('./getImgs.js');
 
 
-const app = express()
+
+const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs')
 const port = process.env.PORT || 3000
