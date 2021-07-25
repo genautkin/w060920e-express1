@@ -4,6 +4,10 @@ const dateFormat = require("dateformat");
 var bodyParser = require('body-parser');
 const Joi = require('joi');
 const mysql = require('mysql');
+const mongoose = require('mongoose');
+
+
+
 
 const contactSchema = Joi.object({
   name: Joi.string().required().min(2).max(70),
@@ -58,44 +62,87 @@ app.get("*", (req, res) => {
         res.render("index",{title:test()});
         });
 
-app.post("/contact", (req, res) => {
-            const { error, value } = contactSchema.validate(req.body);
-            if (error) {
-              res.render("contact",{title:test()});
-              return;
-            }
+   //sql     
+// app.post("/contact", (req, res) => {
+//             const { error, value } = contactSchema.validate(req.body);
+//             if (error) {
+//               res.render("contact",{title:test()});
+//               return;
+//             }
  
-              const connection = mysql.createConnection({
-                host: 'localhost',
-                user: 'root',
-                password: '',
-                database: 'nodejsdb'
-              });
+//               const connection = mysql.createConnection({
+//                 host: 'localhost',
+//                 user: 'root',
+//                 password: '',
+//                 database: 'nodejsdb'
+//               });
            
-              let sql = `INSERT INTO contact_log VALUES(null,?,?,?,?)`;
-              let dataArray = [req.body.name, req.body.email, req.body.phone,req.body.message];
+//               let sql = `INSERT INTO contact_log VALUES(null,?,?,?,?)`;
+//               let dataArray = [req.body.name, req.body.email, req.body.phone,req.body.message];
            
-              connection.query(sql, dataArray, (error, results, fields) => {
+//               connection.query(sql, dataArray, (error, results, fields) => {
            
-                if (results.affectedRows) {
+//                 if (results.affectedRows) {
                   
-                  let mes = ''
-                  if ( req && req.body &&  'submitNow' in  req.body){
-                    mes = 'We are going to call you now!'
-                  }
-                  let name = '';
-                  if (req.body.name) {
-                    name = req.body.name;
-                  }
-                  res.render("thankyou",{name:name,mes:mes});
+//                   let mes = ''
+//                   if ( req && req.body &&  'submitNow' in  req.body){
+//                     mes = 'We are going to call you now!'
+//                   }
+//                   let name = '';
+//                   if (req.body.name) {
+//                     name = req.body.name;
+//                   }
+//                   res.render("thankyou",{name:name,mes:mes});
                   
-                } else {
-                  console.log(error)
-                  res.render("contact",{title:test()});
-                }
+//                 } else {
+//                   console.log(error)
+//                   res.render("contact",{title:test()});
+//                 }
            
-              });
-            })
+//               });
+//             })
+
+const contactSchemaMongo = mongoose.Schema({
+  name: String,
+  email: String,
+  phone: String,
+  message: String
+});
+const ContactInfo = mongoose.model('ContactInfo', contactSchemaMongo);
+
+app.post("/contact", (req, res) => {
+  const { error, value } = contactSchema.validate(req.body);
+  if (error) {
+    res.render("contact",{title:test()});
+    return;
+  }
+  mongoose.connect('mongodb://localhost/contact_log',{useNewUrlParser: true, useUnifiedTopology: true})
+    .then( () => console.log('connecting to mongodb!') )
+    .catch( err => console.error('Could not connect to mongodb', err) );
+
+    new ContactInfo({name:req.body.name, email:req.body.email, phone:req.body.phone,message:req.body.message}).save()
+    .then(()=>{
+ 
+
+        
+        let mes = ''
+        if ( req && req.body &&  'submitNow' in  req.body){
+          mes = 'We are going to call you now!'
+        }
+        let name = '';
+        if (req.body.name) {
+          name = req.body.name;
+        }
+        res.render("thankyou",{name:name,mes:mes});
+        
+      }).catch((error)=>{
+        console.log(error)
+        res.render("contact",{title:test()});
+      })
+ 
+    });
+
+
 
 
          
