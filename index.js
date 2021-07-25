@@ -3,11 +3,13 @@ const express = require('express')
 const dateFormat = require("dateformat");
 var bodyParser = require('body-parser');
 const Joi = require('joi');
+const mysql = require('mysql');
 
 const contactSchema = Joi.object({
   name: Joi.string().required().min(2).max(70),
   email: Joi.string().required().email(),
-  phone: Joi.number().integer().min(9),
+  phone: Joi.number().required().integer().min(9),
+  message: Joi.string().required().min(2).max(70),
   submit: Joi.string()
 });
 
@@ -62,17 +64,41 @@ app.post("/contact", (req, res) => {
               res.render("contact",{title:test()});
               return;
             }
+ 
+              const connection = mysql.createConnection({
+                host: 'localhost',
+                user: 'root',
+                password: '',
+                database: 'nodejsdb'
+              });
+           
+              let sql = `INSERT INTO contact_log VALUES(null,?,?,?,?)`;
+              let dataArray = [req.body.name, req.body.email, req.body.phone,req.body.message];
+           
+              connection.query(sql, dataArray, (error, results, fields) => {
+           
+                if (results.affectedRows) {
+                  
+                  let mes = ''
+                  if ( req && req.body &&  'submitNow' in  req.body){
+                    mes = 'We are going to call you now!'
+                  }
+                  let name = '';
+                  if (req.body.name) {
+                    name = req.body.name;
+                  }
+                  res.render("thankyou",{name:name,mes:mes});
+                  
+                } else {
+                  console.log(error)
+                  res.render("contact",{title:test()});
+                }
+           
+              });
+            })
 
-          let mes = ''
-          if ( req && req.body &&  'submitNow' in  req.body){
-            mes = 'We are going to call you now!'
-          }
-          let name = '';
-          if (req.body.name) {
-            name = req.body.name;
-          }
-          res.render("thankyou",{name:name,mes:mes});
-          });
+
+         
 
     
 function test(){
